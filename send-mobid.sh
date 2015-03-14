@@ -16,7 +16,7 @@ fi
 # we use 7 here so that we can use the testnumber +37200007. The server stills
 # accepts this.
 if ! echo "$1" | grep -E '^\+[[:digit:]]{7,15}$' > /dev/null; then
-	echo "$0: $1: must start with a leading '+' followed by 10 to 15 digits"
+	echo "$0: $1: must start with a leading '+' followed by 10 to 15 digits" >&2
 	exit 65
 fi
 
@@ -31,12 +31,12 @@ status=$(echo "$response" | sed -n 2p)
 body=$(echo "$response" | sed -n 3~1p)
 
 if [ $version -ne 1 ]; then
-	echo "$0: $version: unknown protocol version"
+	echo "$0: $version: unknown protocol version" >&2
 	exit 76
 fi
 
 if [ $status -ne 0 ]; then
-	echo "$0: $status: non-zero status code: $body"
+	echo "$0: $status: non-zero status code: $body" >&2
 	exit 76
 fi
 
@@ -60,7 +60,7 @@ while true; do
 	body=$(echo "$response" | sed -n 3~1p)
 
 	if [ $version -ne 1 ]; then
-		echo "$0: $version: unknown protocol version"
+		echo "$0: $version: unknown protocol version" >&2
 		exit 76
 	fi
 
@@ -74,7 +74,7 @@ while true; do
 			continue
 			;;
 		*)
-			echo "$0: $status: non-successful status code: $body"
+			echo "$0: $status: non-successful status code: $body" >&2
 			exit 76
 			;;
 	esac
